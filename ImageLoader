@@ -1,0 +1,61 @@
+import java.io.*;
+import java.net.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.awt.image.*;
+import javax.imageio.*;
+
+import javax.swing.*;
+import java.util.Random;
+
+
+public class ImageLoader extends JPanel{
+    private BufferedImage img;
+    private int width,height;
+    public ImageLoader(){
+        LoadImage(new File("images/jerry.png"));
+        width = img.getWidth();
+        height = img.getHeight();
+    }
+    public ImageLoader(File f){
+        LoadImage(f);
+        width = img.getWidth();
+        height = img.getHeight();
+    }
+    public void LoadImage(File f) {
+        try {
+            img = ImageIO.read(f);
+            //int w = img.getWidth(null);
+            //int h = img.getHeight(null);
+        } catch (IOException e) {
+            System.out.println("Image could not be read");
+        }
+    }
+    public void LoadImage(String s){
+        try {
+            URL url = new URL(s);
+            img = ImageIO.read(url);
+        } 
+        catch (IOException e) {
+            System.out.println(e);
+            System.out.println("Image could not be read");
+        }
+    }
+    public void resize(double scale){
+        BufferedImage resizedImage = new BufferedImage((int)(Double.valueOf(width)*scale), (int)(Double.valueOf(height)*scale), BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g = resizedImage.createGraphics();
+        g.drawImage(img, 0, 0, (int)(Double.valueOf(width)*scale), (int)(Double.valueOf(height)*scale), null);
+        g.dispose();
+        img = resizedImage;
+        repaint();
+    }
+    public BufferedImage getImg(){
+        return img;
+    }
+    public void setImg(BufferedImage i){
+        img = i;
+    }
+    public void paint(Graphics g) {         
+        g.drawImage(img, 50, 50, null);
+    }
+}
