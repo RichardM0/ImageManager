@@ -1,0 +1,82 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.awt.Graphics2D;
+import javax.imageio.*;
+import java.io.File;
+import java.awt.image.BufferedImage;
+
+
+
+public class ImageMain extends JPanel implements ItemListener
+{
+    private static JFrame frame;
+    private static JPanel bottomPanel;
+    private static JRadioButtonMenuItem low, medium, high;
+    private static JMenuBar menuBar;
+    private static ButtonGroup zoomGroup;
+    private static JButton selectImg;
+    private static JMenu zoomMenu;
+    private static ImageLoader L;
+    
+    public ImageMain(){
+        frame = new JFrame();
+        bottomPanel = new JPanel();
+        zoomGroup = new ButtonGroup();
+        menuBar = new JMenuBar();
+        zoomMenu = new JMenu("Zoom"); 
+        zoomMenu.addSeparator();
+        low = new JRadioButtonMenuItem("50% zoom");
+        medium = new JRadioButtonMenuItem("100% zoom");
+        high = new JRadioButtonMenuItem("200% zoom");
+        
+        
+        selectImg = new JButton("Select Image"); 
+        bottomPanel.add(selectImg);
+        
+        low.addItemListener(this);
+        medium.addItemListener(this);
+        high.addItemListener(this);
+        
+        zoomMenu.add(low);
+        zoomMenu.add(medium);
+        zoomMenu.add(high);
+        
+        zoomGroup.add(low);
+        zoomGroup.add(medium);
+        zoomGroup.add(high);
+        
+        menuBar.add(zoomMenu);
+        L = new ImageLoader();
+        
+        frame.add(L);
+        frame.add(bottomPanel, BorderLayout.SOUTH);
+        frame.setJMenuBar(menuBar);
+
+        frame.setSize(600,600);
+        frame.setVisible(true);
+    }
+    public static void main(String[] args){      
+        new ImageMain();
+    }
+    public void actionPerformed(ActionEvent e){
+        if (e.getSource() == selectImg){
+            JFileChooser select = new JFileChooser("images/");
+            int status = select.showOpenDialog(frame);
+            if (status == JFileChooser.APPROVE_OPTION) {
+                L.LoadImage(select.getSelectedFile());
+            }
+        }
+    }
+    public void itemStateChanged(ItemEvent e){
+        if (e.getSource() == low){
+            L.resize(0.5);
+        }
+        else if (e.getSource() == medium){
+            L.resize(1);
+        }
+        else if (e.getSource() == high){
+            L.resize(2);
+        }
+    }
+}
