@@ -15,7 +15,7 @@ public class ImageMain extends JPanel implements ItemListener, ActionListener
     private static JRadioButtonMenuItem low, medium, high;
     private static JMenuBar menuBar;
     private static ButtonGroup zoomGroup;
-    private static JButton selectImg, grayScale;
+    private static JButton selectImg, grayScale, recolourImg;
     private static JMenu zoomMenu;
     private static ImageLoader L;
     
@@ -33,11 +33,14 @@ public class ImageMain extends JPanel implements ItemListener, ActionListener
 
         selectImg = new JButton("Select Image");
         grayScale = new JButton("Turn Gray");
+        recolourImg = new JButton("Recolour");
         selectImg.addActionListener(this);
         grayScale.addActionListener(this);
-        bottomPanel.add(grayScale);
+        recolourImg.addActionListener(this);
         bottomPanel.add(selectImg);
-
+        bottomPanel.add(grayScale);
+        bottomPanel.add(recolourImg);
+        
         low.addItemListener(this);
         medium.addItemListener(this);
         high.addItemListener(this);
@@ -75,6 +78,9 @@ public class ImageMain extends JPanel implements ItemListener, ActionListener
         }
         else if(e.getSource() == grayScale){
             L.grayScale();
+        }
+        else if(e.getSource() == recolourImg){
+            L.colourImage();
         }
     }
     public void itemStateChanged(ItemEvent e){
