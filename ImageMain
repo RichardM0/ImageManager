@@ -8,52 +8,57 @@ import java.awt.image.BufferedImage;
 
 
 
-public class ImageMain extends JPanel implements ItemListener
+public class ImageMain extends JPanel implements ItemListener, ActionListener
 {
-    private static JFrame frame;
-    private static JPanel bottomPanel;
+    public static JFrame frame;
+    private static JPanel bottomPanel, imgPanel;
     private static JRadioButtonMenuItem low, medium, high;
     private static JMenuBar menuBar;
     private static ButtonGroup zoomGroup;
-    private static JButton selectImg;
+    private static JButton selectImg, grayScale;
     private static JMenu zoomMenu;
     private static ImageLoader L;
     
-    public ImageMain(){
+    public ImageMain() {
         frame = new JFrame();
         bottomPanel = new JPanel();
+        imgPanel = new JPanel(new FlowLayout(FlowLayout.CENTER)); 
         zoomGroup = new ButtonGroup();
         menuBar = new JMenuBar();
-        zoomMenu = new JMenu("Zoom"); 
+        zoomMenu = new JMenu("Zoom");
         zoomMenu.addSeparator();
         low = new JRadioButtonMenuItem("50% zoom");
         medium = new JRadioButtonMenuItem("100% zoom");
         high = new JRadioButtonMenuItem("200% zoom");
-        
-        
-        selectImg = new JButton("Select Image"); 
+
+        selectImg = new JButton("Select Image");
+        grayScale = new JButton("Turn Gray");
+        selectImg.addActionListener(this);
+        grayScale.addActionListener(this);
+        bottomPanel.add(grayScale);
         bottomPanel.add(selectImg);
-        
+
         low.addItemListener(this);
         medium.addItemListener(this);
         high.addItemListener(this);
         
+
         zoomMenu.add(low);
         zoomMenu.add(medium);
         zoomMenu.add(high);
-        
+
         zoomGroup.add(low);
         zoomGroup.add(medium);
         zoomGroup.add(high);
-        
+
         menuBar.add(zoomMenu);
         L = new ImageLoader();
-        
-        frame.add(L);
+        frame.add(L, BorderLayout.CENTER);
         frame.add(bottomPanel, BorderLayout.SOUTH);
         frame.setJMenuBar(menuBar);
 
-        frame.setSize(600,600);
+        frame.setSize(600, 600);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
     }
     public static void main(String[] args){      
@@ -64,8 +69,12 @@ public class ImageMain extends JPanel implements ItemListener
             JFileChooser select = new JFileChooser("images/");
             int status = select.showOpenDialog(frame);
             if (status == JFileChooser.APPROVE_OPTION) {
-                L.LoadImage(select.getSelectedFile());
+                L.loadImage(select.getSelectedFile());
+                L.updateImg();
             }
+        }
+        else if(e.getSource() == grayScale){
+            L.grayScale();
         }
     }
     public void itemStateChanged(ItemEvent e){
