@@ -10,7 +10,7 @@ import java.util.Random;
 
 
 public class ImageLoader extends JPanel{
-    private BufferedImage img;
+    private BufferedImage img, originalImg;
     private int width, height, curWidth, curHeight;
     public ImageLoader(){
         loadImage(new File("images/jerry.png"));
@@ -21,6 +21,7 @@ public class ImageLoader extends JPanel{
     public void loadImage(File f) {
         try {
             img = ImageIO.read(f);
+            originalImg = img;
             width = img.getWidth();
             curWidth = width;
             height = img.getHeight();
@@ -32,6 +33,7 @@ public class ImageLoader extends JPanel{
     public void loadImage(String s){
         try {
             URL url = new URL(s);
+            originalImg = img;
             width = img.getWidth();
             curWidth = width;
             height = img.getHeight();
@@ -46,11 +48,12 @@ public class ImageLoader extends JPanel{
     public void resize(double scale){
         curWidth = (int)(Double.valueOf(width)*scale);
         curHeight = (int)(Double.valueOf(height)*scale);
-        BufferedImage resizedImage = new BufferedImage(curWidth, curHeight,BufferedImage.TYPE_INT_ARGB);
+        BufferedImage resizedImage = new BufferedImage(curWidth, curHeight, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g = resizedImage.createGraphics();
         g.drawImage(img, 0, 0, curWidth, curHeight, null);
         g.dispose();
         img = resizedImage;
+        originalImg = img;
         repaint();
     }
     public void grayScale(){
@@ -62,9 +65,9 @@ public class ImageLoader extends JPanel{
         repaint();
     }
     public void colourImage(){
-        BufferedImage colouredImage = new BufferedImage(width, height,  BufferedImage.TYPE_INT_ARGB);
+        BufferedImage colouredImage = new BufferedImage(curWidth, curHeight,  BufferedImage.TYPE_INT_ARGB);
         Graphics2D g = colouredImage.createGraphics();  
-        g.drawImage(img, 0, 0, null);  
+        g.drawImage(originalImg, 0, 0, null);  
         g.dispose(); 
         img = colouredImage;
         repaint();
