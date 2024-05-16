@@ -53,7 +53,6 @@ public class ImageLoader extends JPanel{
         g.drawImage(img, 0, 0, curWidth, curHeight, null);
         g.dispose();
         img = resizedImage;
-        originalImg = img;
         repaint();
     }
     public void grayScale(){
@@ -67,7 +66,7 @@ public class ImageLoader extends JPanel{
     public void colourImage(){
         BufferedImage colouredImage = new BufferedImage(curWidth, curHeight,  BufferedImage.TYPE_INT_ARGB);
         Graphics2D g = colouredImage.createGraphics();  
-        g.drawImage(originalImg, 0, 0, null);  
+        g.drawImage(originalImg, 0, 0, curWidth, curHeight, null);  
         g.dispose(); 
         img = colouredImage;
         repaint();
@@ -75,7 +74,8 @@ public class ImageLoader extends JPanel{
     public void updateImg(){
         repaint();
     }
-    public void paint(Graphics g) {         
-        g.drawImage(img, 50, 50, null);
+    public void paint(Graphics g) {    
+        super.paint(g);
+        g.drawImage(img, (ImageMain.frame.getWidth() -  curWidth)/2, 50, null);
     }
 }
