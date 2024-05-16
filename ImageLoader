@@ -11,29 +11,31 @@ import java.util.Random;
 
 public class ImageLoader extends JPanel{
     private BufferedImage img;
-    private int width,height;
+    private int width, height, curWidth, curHeight;
     public ImageLoader(){
-        LoadImage(new File("images/jerry.png"));
-        width = img.getWidth();
-        height = img.getHeight();
+        loadImage(new File("images/jerry.png"));
     }
     public ImageLoader(File f){
-        LoadImage(f);
-        width = img.getWidth();
-        height = img.getHeight();
+        loadImage(f);
     }
-    public void LoadImage(File f) {
+    public void loadImage(File f) {
         try {
             img = ImageIO.read(f);
-            //int w = img.getWidth(null);
-            //int h = img.getHeight(null);
+            width = img.getWidth();
+            curWidth = width;
+            height = img.getHeight();
+            curHeight = height;
         } catch (IOException e) {
             System.out.println("Image could not be read");
         }
     }
-    public void LoadImage(String s){
+    public void loadImage(String s){
         try {
             URL url = new URL(s);
+            width = img.getWidth();
+            curWidth = width;
+            height = img.getHeight();
+            curHeight = height;
             img = ImageIO.read(url);
         } 
         catch (IOException e) {
@@ -42,18 +44,33 @@ public class ImageLoader extends JPanel{
         }
     }
     public void resize(double scale){
-        BufferedImage resizedImage = new BufferedImage((int)(Double.valueOf(width)*scale), (int)(Double.valueOf(height)*scale), BufferedImage.TYPE_INT_ARGB);
+        curWidth = (int)(Double.valueOf(width)*scale);
+        curHeight = (int)(Double.valueOf(height)*scale);
+        BufferedImage resizedImage = new BufferedImage(curWidth, curHeight,BufferedImage.TYPE_INT_ARGB);
         Graphics2D g = resizedImage.createGraphics();
-        g.drawImage(img, 0, 0, (int)(Double.valueOf(width)*scale), (int)(Double.valueOf(height)*scale), null);
+        g.drawImage(img, 0, 0, curWidth, curHeight, null);
         g.dispose();
         img = resizedImage;
         repaint();
     }
-    public BufferedImage getImg(){
-        return img;
+    public void grayScale(){
+        BufferedImage grayImage = new BufferedImage(curWidth, curHeight,  BufferedImage.TYPE_BYTE_GRAY);  
+        Graphics2D g = grayImage.createGraphics();  
+        g.drawImage(img, 0, 0, null);  
+        g.dispose(); 
+        img = grayImage;
+        repaint();
     }
-    public void setImg(BufferedImage i){
-        img = i;
+    public void colourImage(){
+        BufferedImage colouredImage = new BufferedImage(width, height,  BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g = colouredImage.createGraphics();  
+        g.drawImage(img, 0, 0, null);  
+        g.dispose(); 
+        img = colouredImage;
+        repaint();
+    }
+    public void updateImg(){
+        repaint();
     }
     public void paint(Graphics g) {         
         g.drawImage(img, 50, 50, null);
